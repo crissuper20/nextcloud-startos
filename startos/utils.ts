@@ -1,16 +1,30 @@
 import { sdk } from './sdk'
 import { T, utils } from '@start9labs/start-sdk'
+import { SDKManifest } from '@start9labs/start-sdk/base/lib/types'
 
 export const uiPort = 80 as const
 export const NEXTCLOUD_PATH = '/var/www/html' as const
 export const POSTGRES_PATH = '/var/lib/postgresql' as const
 
-export const nextcloudMount = sdk.Mounts.of().mountVolume({
-  volumeId: 'nextcloud',
-  mountpoint: NEXTCLOUD_PATH,
-  readonly: false,
-  subpath: null,
-})
+interface QBittorrentManifest extends SDKManifest {
+  readonly id: 'qbittorrent'
+  readonly volumes: ('main' | 'downloads')[]
+}
+
+export const nextcloudMount = sdk.Mounts.of()
+  .mountVolume({
+    volumeId: 'nextcloud',
+    mountpoint: NEXTCLOUD_PATH,
+    readonly: false,
+    subpath: null,
+  })
+  .mountDependency<QBittorrentManifest>({
+    dependencyId: 'qbittorrent',
+    volumeId: 'downloads',
+    subpath: null,
+    mountpoint: '/mnt/qbittorrent',
+    readonly: false,
+  })
 
 export const POSTGRES_DB = 'nextcloud'
 export const POSTGRES_USER = 'nextcloud'

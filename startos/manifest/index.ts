@@ -41,5 +41,14 @@ export const manifest = setupManifest({
     start: null,
     stop: null,
   },
-  dependencies: {},
+  dependencies: {
+    qbittorrent: {
+      description: 'Browse or stream torrented media from qBittorrent',
+      optional: true,
+      metadata: {
+        title: 'qBittorrent',
+        icon: 'https://raw.githubusercontent.com/crissuper20/qbittorrent-startos/refs/heads/main/icon.png',
+      },
+    },
+  },
 })
